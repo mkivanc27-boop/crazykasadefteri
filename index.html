@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrazyClubs - Kasa Defteri</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #f97316;
+            --green: #10b981;
+            --red: #ef4444;
+            --text: #f1f5f9;
+            --subtext: #94a3b8;
+            --border: #334155;
+            --input-bg: #0f172a;
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse at top, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            color: var(--text);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            padding: 8px 0;
+        }
+        .header .logo {
+            font-size: 2.2em;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #f97316, #fb923c, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3));
+        }
+        .header .subtitle {
+            font-size: 0.85em;
+            color: var(--subtext);
+            font-weight: 500;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        /* KASA KARTI */
+        .kasa-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 24px 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .kasa-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 100px;
+            height: 100px;
+            background: var(--green);
+            opacity: 0.08;
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+        .kasa-card::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            opacity: 0.06;
+            border-radius: 50%;
+            filter: blur(25px);
+        }
+        .kasa-label {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--subtext);
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        .kasa-bakiye {
+            font-size: 3.2em;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -1px;
+            margin: 8px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s;
+        }
+        .kasa-bakiye.pulse {
+            animation: balancePulse 0.4s ease;
+        }
+        @keyframes balancePulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        .kasa-ozet {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            font-size: 0.85em;
+            position: relative;
+            z-index: 1;
+        }
+        .ozet-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        .ozet-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .ozet-dot.green {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+        .ozet-dot.red {
+            background: var(--red);
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+        }
+
+        /* BUTONLAR */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn {
+            padding: 18px 16px;
+            border-radius: 18px;
+            border: none;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-girdi {
+            background: #065f46;
+            border-color: #10b981;
+            grid-column: 1 / -1;
+            font-size: 1.15em;
+            padding: 22px;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+        }
+        .btn-girdi:hover {
+            background: #047857;
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.35);
+            transform: translateY(-2px);
+        }
+        .btn-girdi .icon {
+            font-size: 1.4em;
+        }
+        .btn-cikti {
+            background: #7f1d1d;
+            border-color: #ef4444;
+            grid-column: 1 / -1;
+            font-size: 1.15em;
+            padding: 22px;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2);
+        }
+        .btn-cikti:hover {
+            background: #991b1b;
+            box-shadow: 0 12px 35px rgba(239, 68, 68, 0.35);
+            transform: translateY(-2px);
+        }
+        .btn-cikti .icon {
+            font-size: 1.4em;
+        }
+        .btn-fis {
+            background: var(--card);
+            border-color: #f59e0b;
+            color: #fbbf24;
+        }
+        .btn-fis:hover {
+            background: #1e293b;
+            border-color: #fbbf24;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+        }
+        .btn-tarih {
+            background: var(--card);
+            border-color: #6366f1;
+            color: #a5b4fc;
+        }
+        .btn-tarih:hover {
+            background: #1e293b;
+            border-color: #818cf8;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+        }
+        .btn-full {
+            grid-column: 1 / -1;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 24px 20px;
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .modal h2 {
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .modal h2.girdi-title {
+            color: #10b981;
+        }
+        .modal h2.cikti-title {
+            color: #ef4444;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--subtext);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            background: var(--input-bg);
+            color: #fff;
+            font-size: 1.05em;
+            font-family: inherit;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+        }
+        .form-group input::placeholder {
+            color: #475569;
+        }
+        .odeme-secenek {
+            display: flex;
+            gap: 8px;
+        }
+        .odeme-btn {
+            flex: 1;
+            padding: 14px 8px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            background: var(--input-bg);
+            color: #94a3b8;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .odeme-btn.selected {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            color: #fff;
+            font-family: inherit;
+            margin-top: 4px;
+        }
+        .btn-primary.save {
+            background: var(--accent);
+        }
+        .btn-primary.save:hover {
+            background: #ea580c;
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
+        }
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--subtext);
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 0.95em;
+        }
+        .btn-secondary:hover {
+            border-color: #64748b;
+            color: #fff;
+        }
+
+        /* FİŞ */
+        .fis {
+            background: #fffef7;
+            color: #1a1a1a;
+            padding: 20px 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85em;
+            line-height: 1.8;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .fis .fis-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+        }
+        .fis .fis-date {
+            text-align: center;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .fis .fis-line {
+            border-top: 1px dashed #999;
+            margin: 10px 0;
+        }
+        .fis .fis-bold {
+            font-weight: bold;
+            font-size: 1em;
+        }
+        .fis .fis-big {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #065f46;
+        }
+        .fis .fis-red {
+            color: #991b1b;
+        }
+
+        /* TARİH LİSTESİ */
+        .tarih-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .tarih-list li {
+            padding: 16px;
+            background: var(--input-bg);
+            border-radius: 14px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .tarih-list li:hover {
+            border-color: var(--accent);
+            background: #1e293b;
+        }
+        .tarih-list .tarih-baslik {
+            font-weight: 700;
+            font-size: 1em;
+        }
+        .tarih-list .tarih-ozet {
+            font-size: 0.8em;
+            color: var(--subtext);
+            margin-top: 4px;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 400px) {
+            .kasa-bakiye {
+                font-size: 2.6em;
+            }
+            .btn {
+                font-size: 0.9em;
+                padding: 16px 12px;
+            }
+            .btn-girdi,
+            .btn-cikti {
+                font-size: 1em;
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">🃏 CrazyClubs</div>
+            <div class="subtitle" id="currentDate">Yükleniyor...</div>
+        </div>
+
+        <!-- KASA KARTI -->
+        <div class="kasa-card">
+            <div class="kasa-label">🏧 Kasadaki Nakit</div>
+            <div class="kasa-bakiye" id="kasaBakiye">0,00 ₺</div>
+            <div class="kasa-ozet">
+                <div class="ozet-item"><span class="ozet-dot green"></span> Girdi: <strong id="toplamGirdi">0,00 ₺</strong></div>
+                <div class="ozet-item"><span class="ozet-dot red"></span> Çıktı: <strong id="toplamCikti">0,00 ₺</strong></div>
+            </div>
+        </div>
+
+        <!-- BUTONLAR -->
+        <div class="btn-grid">
+            <button class="btn btn-girdi" id="btnF5">
+                <span class="icon">💰</span> PARA GİRDİ (F5)
+            </button>
+            <button class="btn btn-cikti" id="btnF6">
+                <span class="icon">💸</span> PARA ÇIKTI (F6)
+            </button>
+            <button class="btn btn-fis" id="btnF7">
+                📋 Gün Sonu Fişi
+            </button>
+            <button class="btn btn-tarih" id="btnTarih">
+                📅 Eski Kayıtlar
+            </button>
+        </div>
+    </div>
+
+    <!-- GİRDİ MODAL -->
+    <div class="modal-overlay" id="girdiModal">
+        <div class="modal">
+            <h2 class="girdi-title">💰 Para Girişi</h2>
+            <div class="form-group">
+                <label>Ne sattın? (kısa)</label>
+                <input type="text" id="girdiAciklama" placeholder="Oyuncak, Çay, Kola...">
+            </div>
+            <div class="form-group">
+                <label>Tutar</label>
+                <input type="number" id="girdiTutar" placeholder="0,00" step="0.01" min="0" inputmode="decimal">
+            </div>
+            <div class="form-group">
+                <label>Ödeme Şekli</label>
+                <div class="odeme-secenek" id="odemeSecenek">
+                    <div class="odeme-btn selected" data-odeme="nakit">💵 Nakit</div>
+                    <div class="odeme-btn" data-odeme="pos">💳 POS</div>
+                    <div class="odeme-btn" data-odeme="iban">🏦 IBAN</div>
+                </div>
+            </div>
+            <button class="btn-primary save" id="btnGirdiKaydet">✅ Kaydet</button>
+            <button class="btn-secondary" id="btnGirdiIptal">İptal</button>
+        </div>
+    </div>
+
+    <!-- ÇIKTI MODAL -->
+    <div class="modal-overlay" id="ciktiModal">
+        <div class="modal">
+            <h2 class="cikti-title">💸 Para Çıkışı</h2>
+            <div class="form-group">
+                <label>Kategori</label>
+                <select id="ciktiKategori">
+                    <option>🍽️ Yemek</option>
+                    <option>⚡ Fatura</option>
+                    <option>📦 Malzeme</option>
+                    <option>🏠 Kira</option>
+                    <option>🚗 Ulaşım</option>
+                    <option>💰 Borç Ödeme</option>
+                    <option>📝 Diğer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Kısa açıklama</label>
+                <input type="text" id="ciktiAciklama" placeholder="Elektrik, Pidem Burger...">
+            </div>
+            <div class="form-group">
+                <label>Tutar</label>
+                <input type="number" id="ciktiTutar" placeholder="0,00" step="0.01" min="0" inputmode="decimal">
+            </div>
+            <button class="btn-primary save" id="btnCiktiKaydet" style="background:#ef4444;">✅ Kaydet</button>
+            <button class="btn-secondary" id="btnCiktiIptal">İptal</button>
+        </div>
+    </div>
+
+    <!-- FİŞ MODAL -->
+    <div class="modal-overlay" id="fisModal">
+        <div class="modal" id="fisContent"></div>
+    </div>
+
+    <!-- GEÇMİŞ MODAL -->
+    <div class="modal-overlay" id="tarihModal">
+        <div class="modal">
+            <h2 style="color:#a5b4fc;">📅 Geçmiş Kayıtlar</h2>
+            <ul class="tarih-list" id="tarihListe"></ul>
+            <button class="btn-secondary" id="btnTarihKapat">Kapat</button>
+        </div>
+    </div>
+
+    <script>
+        const APP_KEY = 'crazyclubs_kasa_v2';
+
+        function bugun() { return new Date().toISOString().split('T')[0]; }
+
+        function saat() { return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); }
+
+        function getData() { const d = localStorage.getItem(APP_KEY); return d ? JSON.parse(d) : {}; }
+
+        function saveData(data) { localStorage.setItem(APP_KEY, JSON.stringify(data)); }
+
+        function getBugunIslemler() { const d = getData(); return d[bugun()] || { girdiler: [], ciktilar: [], nakitKasa: 0 }; }
+
+        function saveBugunIslemler(i) { const d = getData();
+            d[bugun()] = i;
+            saveData(d); }
+
+        function nakitHesapla(i) {
+            let n = 0;
+            i.girdiler.forEach(g => { if (g.odeme === 'nakit') n += g.tutar; });
+            i.ciktilar.forEach(c => { n -= c.tutar; });
+            return Math.max(0, n);
+        }
+
+        function tGirdi(i) { return i.girdiler.reduce((s, g) => s + g.tutar, 0); }
+
+        function tCikti(i) { return i.ciktilar.reduce((s, c) => s + c.tutar, 0); }
+
+        function ekraniGuncelle() {
+            const i = getBugunIslemler();
+            const n = nakitHesapla(i);
+            document.getElementById('kasaBakiye').textContent = n.toFixed(2).replace('.', ',') + ' ₺';
+            document.getElementById('toplamGirdi').textContent = tGirdi(i).toFixed(2).replace('.', ',') + ' ₺';
+            document.getElementById('toplamCikti').textContent = tCikti(i).toFixed(2).replace('.', ',') + ' ₺';
+            document.getElemen
